@@ -2,6 +2,11 @@
 
 An intelligent tic-tac-toe game with AI opponent (using **minimax algorithm** with **alpha-beta pruning**), beautiful UI, and detailed performance tracking.
 
+## Link
+```
+https://tic-tac-toe-ai-three-pied.vercel.app/
+```
+
 ## ✨ Features
 
 - **2 Difficulty Levels**: Easy (random) and Hard (minimax with alpha-beta pruning)
