@@ -11,7 +11,7 @@ function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [winner, setWinner] = useState(null);
   const [stepCount, setStepCount] = useState(0);
-  const [difficulty, setDifficulty] = useState("hard");
+  const [difficulty, setDifficulty] = useState("practice"); // "easy", "hard", "practice"
   const [scores, setScores] = useState(() => {
     const saved = loadScores();
     return (
@@ -33,7 +33,8 @@ function App() {
     // Guard AI move by checking winner directly to avoid race where
     // AI effect runs before winner state updates after a player's move.
     const w = calculateWinner(board);
-    if (!xIsNext && !w.winner) {
+    if (!xIsNext && !w.winner && difficulty !== "practice") {
+      // Disable AI in practice mode
       const aiResult =
         difficulty === "hard"
           ? getBestMoveAlphaBeta(board)
@@ -53,7 +54,7 @@ function App() {
   }, [xIsNext, board, difficulty]);
 
   useEffect(() => {
-    if (!winner) return;
+    if (!winner || difficulty === "practice") return; // Don't track scores in practice mode
     setScores((prev) => {
       const next = { ...prev };
       if (winner === "draw") {
@@ -72,15 +73,27 @@ function App() {
       saveScores(next);
       return next;
     });
-  }, [winner]);
+  }, [winner, difficulty]);
 
   const handleClick = (index) => {
-    if (board[index] || winner || !xIsNext) return; // Block if not player turn
-    const newBoard = [...board];
-    newBoard[index] = "X"; // Player is always X
-    setBoard(newBoard);
-    setXIsNext(false); // Switch to AI turn
-    setStepCount((prev) => prev + 1);
+    if (board[index] || winner) return;
+
+    if (difficulty === "practice") {
+      // Practice mode: allow manual control of both X and O
+      const newBoard = [...board];
+      newBoard[index] = xIsNext ? "X" : "O";
+      setBoard(newBoard);
+      setXIsNext(!xIsNext);
+      setStepCount((prev) => prev + 1);
+    } else {
+      // AI mode: player is always X, block if not player turn
+      if (!xIsNext) return; // Block if not player turn
+      const newBoard = [...board];
+      newBoard[index] = "X"; // Player is always X
+      setBoard(newBoard);
+      setXIsNext(false); // Switch to AI turn
+      setStepCount((prev) => prev + 1);
+    }
   };
 
   const [winningLine, setWinningLine] = useState(null);
@@ -122,6 +135,7 @@ function App() {
         scores={scores}
         onResetScores={resetScores}
         aiMetrics={aiMetrics}
+        xIsNext={xIsNext}
       />
       <Board
         board={board}

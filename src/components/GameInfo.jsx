@@ -9,6 +9,7 @@ function GameInfo({
   scores,
   onResetScores,
   aiMetrics,
+  xIsNext,
 }) {
   return (
     <div className="game-info">
@@ -18,6 +19,8 @@ function GameInfo({
           ? "Draw!"
           : winner
           ? `Winner: ${winner}`
+          : difficulty === "practice"
+          ? `Next: ${xIsNext ? "X" : "O"}`
           : "Playing..."}
       </h2>
       <p>Steps: {stepCount}</p>
@@ -50,7 +53,7 @@ function GameInfo({
       </button>
 
       <div className="difficulty-selector">
-        <label>Difficulty: </label>
+        <label>Mode: </label>
         <button
           onClick={() => onDifficultyChange("easy")}
           className={difficulty === "easy" ? "active" : ""}
@@ -62,6 +65,12 @@ function GameInfo({
           className={difficulty === "hard" ? "active" : ""}
         >
           Hard
+        </button>
+        <button
+          onClick={() => onDifficultyChange("practice")}
+          className={difficulty === "practice" ? "active" : ""}
+        >
+          Practice
         </button>
       </div>
 
