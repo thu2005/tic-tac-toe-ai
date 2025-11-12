@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Board from "./components/Board";
 import GameInfo from "./components/GameInfo";
+import MoveHistory from "./components/MoveHistory";
 import { calculateWinner } from "./utils/gameLogic";
 import { getBestMoveAlphaBeta, getRandomMove } from "./utils/ai";
 import "./App.css";
@@ -12,6 +13,9 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [stepCount, setStepCount] = useState(0);
   const [difficulty, setDifficulty] = useState("practice"); // "easy", "hard", "practice"
+  const [moveHistory, setMoveHistory] = useState([Array(9).fill(null)]);
+  const [currentMoveIndex, setCurrentMoveIndex] = useState(0);
+  const [sortAscending, setSortAscending] = useState(true);
   const [scores, setScores] = useState(() => {
     const saved = loadScores();
     return (
@@ -85,6 +89,12 @@ function App() {
       setBoard(newBoard);
       setXIsNext(!xIsNext);
       setStepCount((prev) => prev + 1);
+
+      // Add to history
+      const newHistory = moveHistory.slice(0, currentMoveIndex + 1);
+      newHistory.push(newBoard);
+      setMoveHistory(newHistory);
+      setCurrentMoveIndex(newHistory.length - 1);
     } else {
       // AI mode: player is always X, block if not player turn
       if (!xIsNext) return; // Block if not player turn
@@ -105,6 +115,34 @@ function App() {
     setWinningLine(null);
     setStepCount(0);
     setAiMetrics({ positionsEvaluated: 0, timeMs: 0 });
+    // Reset move history for practice mode
+    if (difficulty === "practice") {
+      setMoveHistory([Array(9).fill(null)]);
+      setCurrentMoveIndex(0);
+    }
+  };
+
+  // Jump to specific move (practice mode only)
+  const jumpToMove = (moveIndex) => {
+    if (difficulty !== "practice") return;
+
+    setCurrentMoveIndex(moveIndex);
+    setBoard(moveHistory[moveIndex]);
+    setXIsNext(moveIndex % 2 === 0);
+
+    // Clear winner if jumping to a move that's not the end
+    if (moveIndex < moveHistory.length - 1) {
+      setWinner(null);
+      setWinningLine(null);
+    }
+
+    // Update step count to match move index
+    setStepCount(moveIndex);
+  };
+
+  // Toggle sort order
+  const toggleSortOrder = () => {
+    setSortAscending(!sortAscending);
   };
 
   const handleDifficultyChange = (newDifficulty) => {
@@ -142,6 +180,16 @@ function App() {
         handleClick={handleClick}
         winningLine={winningLine}
       />
+
+      {difficulty === "practice" && (
+        <MoveHistory
+          moveHistory={moveHistory}
+          currentMoveIndex={currentMoveIndex}
+          onMoveSelect={jumpToMove}
+          sortAscending={sortAscending}
+          onToggleSort={toggleSortOrder}
+        />
+      )}
     </div>
   );
 }
