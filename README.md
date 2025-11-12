@@ -4,7 +4,7 @@ An intelligent tic-tac-toe game with AI opponent (using **minimax algorithm** wi
 
 ## ✨ Features
 
-- **2 Difficulty Levels**: Easy (random) and Hard (minimax with alpha-beta pruning)
+- **3 Game Modes**: Easy (random), Hard (minimax with alpha-beta pruning), and Practice (manual play)
 - **Score Tracking**: Wins/Losses/Draws with streak tracking
 - **Performance Metrics**: Positions evaluated and AI thinking time
 - **Clean UI**: Pastel blue theme with responsive design
@@ -36,9 +36,10 @@ An intelligent tic-tac-toe game with AI opponent (using **minimax algorithm** wi
 1. **Make Your Move**: Click on any empty square to place your X
 2. **AI Response**: The AI will automatically place its O
 3. **Win Conditions**: Get 3 in a row (horizontally, vertically, or diagonally) to win
-4. **Game Tracking**: Your wins, losses, and draws are automatically tracked
-5. **Switch Difficulty**: Change between Easy and Hard mode anytime
-6. **Reset Options**: Reset the current game or clear all scores
+4. **Game Tracking**: Your wins, losses, and draws are automatically tracked (AI modes only)
+5. **Switch Modes**: Change between Easy, Hard, and Practice mode anytime
+6. **Practice Features**: Use time travel to jump to any previous move, sort move history
+7. **Reset Options**: Reset the current game or clear all scores
 
 ## 🧠 AI Difficulty Levels
 
@@ -54,6 +55,13 @@ An intelligent tic-tac-toe game with AI opponent (using **minimax algorithm** wi
 - **Performance**: Displays positions evaluated (typically 50-200 nodes, 50%+ reduction vs basic minimax)
 - **Difficulty**: Unbeatable - the AI will never lose, only win or draw
 
+### Practice Mode
+- **Algorithm**: Manual control for both X and O
+- **Strategy**: Perfect for learning, analyzing games, or playing with friends
+- **Features**: Move history with time travel, sort moves ascending/descending, displays move locations
+- **Use Case**: Educational tool to understand game patterns and strategies
+
+
 ## 📁 Project Structure
 
 ```
@@ -62,7 +70,8 @@ src/
 ├── components/
 │   ├── Board.jsx           # Game board component
 │   ├── Square.jsx          # Individual square component
-│   └── GameInfo.jsx        # Status display, scores, and controls
+│   ├── GameInfo.jsx        # Status display, scores, and controls
+│   └── MoveHistory.jsx     # Move history and time travel (Practice mode)
 ├── utils/
 │   ├── gameLogic.js        # Game rules and winner calculation
 │   ├── ai.js               # AI algorithms (minimax + alpha-beta pruning + random)
