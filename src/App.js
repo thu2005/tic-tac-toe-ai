@@ -25,14 +25,15 @@ function App() {
 
   useEffect(() => {
     const w = calculateWinner(board);
-    setWinner(w);
+    setWinner(w.winner);
+    setWinningLine(w.winningLine);
   }, [board]);
 
   useEffect(() => {
     // Guard AI move by checking winner directly to avoid race where
     // AI effect runs before winner state updates after a player's move.
     const w = calculateWinner(board);
-    if (!xIsNext && !w) {
+    if (!xIsNext && !w.winner) {
       const aiResult =
         difficulty === "hard"
           ? getBestMoveAlphaBeta(board)
@@ -74,18 +75,21 @@ function App() {
   }, [winner]);
 
   const handleClick = (index) => {
-    if (board[index] || winner) return;
+    if (board[index] || winner || !xIsNext) return; // Block if not player turn
     const newBoard = [...board];
-    newBoard[index] = xIsNext ? "X" : "O";
+    newBoard[index] = "X"; // Player is always X
     setBoard(newBoard);
-    setXIsNext(!xIsNext);
+    setXIsNext(false); // Switch to AI turn
     setStepCount((prev) => prev + 1);
   };
+
+  const [winningLine, setWinningLine] = useState(null);
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setXIsNext(true);
     setWinner(null);
+    setWinningLine(null);
     setStepCount(0);
     setAiMetrics({ positionsEvaluated: 0, timeMs: 0 });
   };
@@ -119,7 +123,11 @@ function App() {
         onResetScores={resetScores}
         aiMetrics={aiMetrics}
       />
-      <Board board={board} handleClick={handleClick} />
+      <Board
+        board={board}
+        handleClick={handleClick}
+        winningLine={winningLine}
+      />
     </div>
   );
 }

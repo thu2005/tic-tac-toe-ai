@@ -19,20 +19,20 @@ const calculateWinner = (board) => {
       board[index1] === board[index2] &&
       board[index2] === board[index3]
     ) {
-      return board[index1];
+      return { winner: board[index1], winningLine: set };
     }
   }
 
   if (!board.includes(null)) {
-    return "draw";
+    return { winner: "draw", winningLine: null };
   }
 
-  return null;
+  return { winner: null, winningLine: null };
 };
 
 const isDraw = (board) => {
-  const winner = calculateWinner(board);
-  return winner === "draw";
+  const result = calculateWinner(board);
+  return result.winner === "draw";
 };
 
 const getAvailableMoves = (board) => {

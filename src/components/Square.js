@@ -1,7 +1,12 @@
-function Square({value, handleClick}) {
-    return (
-        <button className="square" onClick={handleClick}>{value}</button>
-    );
+function Square({ value, handleClick, isWinning }) {
+  return (
+    <button
+      className={`square ${isWinning ? "winning" : ""}`}
+      onClick={handleClick}
+    >
+      {value}
+    </button>
+  );
 }
 
-export default Square
+export default Square;

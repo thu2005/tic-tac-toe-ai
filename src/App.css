@@ -216,3 +216,19 @@ body {
 .square:contains("O") {
   color: #a0d8f1;
 }
+
+.square.winning {
+  background: linear-gradient(135deg, #90EE90 0%, #32CD32 100%) !important;
+  color: white !important;
+  animation: winningPulse 1s ease-in-out infinite alternate;
+  box-shadow: 0 0 15px rgba(50, 205, 50, 0.6);
+}
+
+@keyframes winningPulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}

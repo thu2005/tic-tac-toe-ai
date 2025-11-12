@@ -2,7 +2,8 @@ import { calculateWinner, getAvailableMoves } from "./gameLogic.js";
 
 const minimaxAlphaBeta = (board, depth, alpha, beta, isMaximizing, metrics) => {
   metrics.positionsEvaluated++;
-  const winner = calculateWinner(board);
+  const result = calculateWinner(board);
+  const winner = result.winner;
 
   if (winner === "X") {
     return -10 + depth;
